@@ -1,5 +1,19 @@
 # Helmi Ops for Claude Code
 
+**Platform: macOS (Apple Silicon / arm64) only.** The bundled
+`helmi-local.bin`/`helmi-compress-worker` binaries are arm64 Mach-O — they
+will not run on an Intel Mac, Windows, or Linux. Claude Code itself has no
+mechanism to check or enforce this before install (confirmed: `plugin.json`
+has no `os`/`platforms` field it reads or validates), so this line is the
+only thing that actually communicates the limitation — there's a
+best-effort `metadata.platforms` hint in `plugin.json` for any tooling
+that reads it, but Claude Code itself ignores it too. Windows support for
+Codex/Cursor is tracked separately (see `docs/plugin-packaging.md`);
+Claude Code's own path to Windows is architecturally different (its
+marketplace-based install model has one `.mcp.json` per package with no
+OS-conditional `command`, confirmed against the real plugin schema) and is
+not planned for this package.
+
 **Status:** local testing only — not published to a Marketplace. See
 [`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the shared
 packaging history and open items across all three plugin packages (Codex,
