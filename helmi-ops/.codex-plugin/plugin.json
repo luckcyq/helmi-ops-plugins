@@ -1,0 +1,32 @@
+{
+  "name": "helmi-ops",
+  "version": "0.1.0",
+  "description": "Diagnose, monitor, and audit network devices with local evidence and read-only Helmi probes.",
+  "author": {
+    "name": "Helmicore",
+    "email": "support@helmicore.com",
+    "url": "https://helmicore.com"
+  },
+  "homepage": "https://helmicore.com",
+  "repository": "https://github.com/helmicore/helmi",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Helmi Ops",
+    "shortDescription": "Local-first network diagnostics and configuration safety.",
+    "longDescription": "Use a local Helmi Runtime for safe device and Prometheus reads, with Helmi Cloud for bounded diagnostic knowledge and metric-candidate advice.",
+    "developerName": "Helmicore",
+    "category": "Developer tools",
+    "capabilities": [
+      "MCP",
+      "OAuth",
+      "Network diagnostics"
+    ],
+    "defaultPrompt": [
+      "Add or manage a device and connect its Prometheus monitoring.",
+      "Check a device's reachability and interface health with safe read-only probes.",
+      "Capture a redacted configuration baseline and check for changes."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

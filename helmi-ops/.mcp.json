@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "helmi-local": {
+      "type": "stdio",
+      "command": "./scripts/helmi-local",
+      "cwd": "."
+    },
+    "helmi-cloud": {
+      "type": "http",
+      "url": "https://api.helmicore.com/api/v1/helmi/mcp"
+    }
+  }
+}

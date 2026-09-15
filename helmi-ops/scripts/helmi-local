@@ -1,0 +1,79 @@
+#!/bin/sh
+# Launches the local Runtime that backs this plugin's MCP server.
+#
+# Normal (packaged) path: exec the prebuilt binary shipped beside this
+# script — nothing below applies, this is what a real install runs. The
+# packaged helmi-compress-worker binary (docs/diagnostic-compression-
+# plan.md) ships alongside it in this same scripts/ directory for the
+# same reason: the running helmi-local process finds it next to its own
+# os.Executable() path, not via anything this script does at launch time.
+#
+# Dev-loop path: set HELMI_LOCAL_SOURCE_DIR to a local checkout of this
+# repo (the directory containing runtime/) and every edit under
+# runtime/ — a policy.go or runtime/internal/compress change included —
+# takes effect on the next agent task with zero plugin republish/
+# reinstall: this script rebuilds both helmi-local and
+# helmi-compress-worker from source (skipping either rebuild when nothing
+# changed since the last one) instead of execing the bundled, possibly-
+# stale binaries. A new task is still required (the MCP server process
+# itself has no live-reload), but that's the only step left — not a
+# version bump, not a plugin reinstall.
+#
+# This script is identical across every harness package (Codex, Cursor,
+# ...) — it execs a stdio MCP server, which no harness needs a different
+# version of. Keep it byte-identical if you edit it anywhere; each
+# harness's build.sh target checks the copies still match.
+#
+# A failed build fails loudly (exits non-zero) rather than silently
+# falling back to the bundled binary — a broken edit should be obvious
+# immediately, not masked by stale-but-working behavior.
+#
+# Neither build below passes `-tags production` — both are the default
+# build, which trusts only this repo's own development probe-bundle
+# signing key (see runtime/internal/probe/keys_dev.go). That's correct
+# today (pre-launch, no production Cloud/signing key exists yet); before
+# ever shipping helmi-local.bin against a real production Cloud, that
+# build step needs `-tags production` and runtime/internal/probe/
+# keys_production.go needs a real key filled in first — see that file's
+# own comment. Building without the tag against a production Cloud would
+# make every bundle it issues fail signature verification here (a real
+# production signing key never signs anything with the dev key).
+set -e
+
+DIR="$(dirname "$0")"
+
+if [ -n "$HELMI_LOCAL_SOURCE_DIR" ]; then
+  if [ ! -d "$HELMI_LOCAL_SOURCE_DIR/runtime" ]; then
+    echo "helmi-local: HELMI_LOCAL_SOURCE_DIR is set to $HELMI_LOCAL_SOURCE_DIR, which has no runtime/ subdirectory" >&2
+    exit 1
+  fi
+  command -v go >/dev/null 2>&1 || { echo "helmi-local: HELMI_LOCAL_SOURCE_DIR is set but go is not on PATH" >&2; exit 1; }
+
+  # One cache per source checkout: using one fixed output for every checkout
+  # can execute a newer binary built from a different tree whose timestamps
+  # happen to make this tree look unchanged.
+  SOURCE_KEY="$(printf '%s' "$HELMI_LOCAL_SOURCE_DIR" | cksum | awk '{print $1}')"
+  CACHE_DIR="$HOME/.helmi/dev-build/$SOURCE_KEY"
+  CACHE_BIN="$CACHE_DIR/helmi-local"
+  CACHE_WORKER_BIN="$CACHE_DIR/helmi-compress-worker"
+  mkdir -p "$CACHE_DIR"
+
+  if [ ! -x "$CACHE_BIN" ] || find "$HELMI_LOCAL_SOURCE_DIR/runtime" -newer "$CACHE_BIN" \( -name '*.go' -o -name 'go.mod' -o -name 'go.sum' \) 2>/dev/null | grep -q .; then
+    ( cd "$HELMI_LOCAL_SOURCE_DIR/runtime" && go build -o "$CACHE_BIN" ./cmd/helmi-local )
+  fi
+  # helmi-compress-worker is built into this same cache directory, on the
+  # same staleness check, so a runtime/internal/compress edit reaches a
+  # running agent task with zero plugin republish too — see
+  # docs/diagnostic-compression-plan.md. This matters specifically because
+  # the worker is found next to *this* process's own os.Executable() at
+  # spawn time (runtime/internal/mcp/server.go's defaultCompressionRunner),
+  # which is $CACHE_BIN once this branch is taken, not the packaged
+  # scripts/ directory — building it anywhere else here would leave
+  # collect_probe's compression path unable to find it in dev mode.
+  if [ ! -x "$CACHE_WORKER_BIN" ] || find "$HELMI_LOCAL_SOURCE_DIR/runtime" -newer "$CACHE_WORKER_BIN" \( -name '*.go' -o -name 'go.mod' -o -name 'go.sum' \) 2>/dev/null | grep -q .; then
+    ( cd "$HELMI_LOCAL_SOURCE_DIR/runtime" && go build -o "$CACHE_WORKER_BIN" ./cmd/helmi-compress-worker )
+  fi
+  exec env HELMI_SSH_ASKPASS_HELPER="$CACHE_BIN" "$CACHE_BIN" "$@"
+fi
+
+exec env HELMI_SSH_ASKPASS_HELPER="$DIR/helmi-local.bin" "$DIR/helmi-local.bin" "$@"

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "helmi-local": {
+      "type": "stdio",
+      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/helmi-local"
+    },
+    "helmi-cloud": {
+      "type": "http",
+      "url": "https://api.helmicore.com/api/v1/helmi/mcp",
+      "oauth": {
+        "clientId": "helmi-ops-claude",
+        "callbackPort": 8788,
+        "scopes": "helmi:read"
+      }
+    }
+  }
+}

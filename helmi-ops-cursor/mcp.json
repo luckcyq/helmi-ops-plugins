@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "helmi-local": {
+      "type": "stdio",
+      "command": "sh",
+      "args": [
+        "-c",
+        "p=\"${PLUGIN_ROOT}\"; if [ -z \"$p\" ] || [ \"$p\" = '${PLUGIN_ROOT}' ]; then p=\"$0\"; fi; if [ -x \"$p/scripts/helmi-local\" ]; then exec \"$p/scripts/helmi-local\" \"$@\"; fi; for d in \"$HOME/.cursor/plugins/local/helmi-ops-cursor\" \"$HOME/.helmi/runtime/helmi-ops-cursor\"; do if [ -x \"$d/scripts/helmi-local\" ]; then exec \"$d/scripts/helmi-local\" \"$@\"; fi; if [ -x \"$d/helmi-local\" ]; then exec \"$d/helmi-local\" \"$@\"; fi; done; echo 'helmi-local: could not locate plugin runtime' >&2; exit 1",
+        "${PLUGIN_ROOT}"
+      ]
+    },
+    "helmi-cloud": {
+      "url": "https://api.helmicore.com/api/v1/helmi/mcp",
+      "auth": {
+        "CLIENT_ID": "helmi-ops-cursor",
+        "scopes": [
+          "helmi:read"
+        ]
+      }
+    }
+  }
+}

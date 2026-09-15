@@ -1,0 +1,14 @@
+{
+  "name": "helmi-ops-claude",
+  "description": "Diagnose, monitor, and audit network devices with local evidence and read-only Helmi probes.",
+  "owner": {
+    "name": "Helmicore"
+  },
+  "plugins": [
+    {
+      "name": "helmi-ops",
+      "source": ".",
+      "description": "Diagnose, monitor, and audit network devices with local evidence and read-only Helmi probes."
+    }
+  ]
+}
