@@ -2,16 +2,19 @@
 # Installs this plugin's local Runtime onto a fixed path and points this
 # copy's mcp.json at it directly.
 #
-# Why this exists: Cursor does not resolve a relative "command" (or a
-# "cwd": "${PLUGIN_ROOT}"/"." override — both tried and confirmed not to
-# work) against a plugin's own install directory, for a locally-loaded
-# plugin or, as far as this has been tested, any other install path
-# either. This is a known, open, unresolved gap in the wider Agent
-# Plugins ecosystem, not specific to this plugin — see
-# https://github.com/openai/codex/issues/22842 for the same problem
-# reported against Codex. Codex's own packaging in this repo does not
-# need this workaround: its plugin loader does resolve "cwd": "."
-# against the plugin directory correctly, which is specific to Codex.
+# Why this exists: mcp.json's primary mechanism is Cursor's own
+# documented "cwd": "${CURSOR_PLUGIN_ROOT}" (Cursor expands this before
+# spawning "command" — the generic Agent Plugins standard's "${PLUGIN_ROOT}"
+# is explicitly NOT expanded by Cursor, confirmed at
+# https://prod.cursor.com/docs/reference/plugins — an earlier "cwd":
+# "${PLUGIN_ROOT}"/"." attempt using that wrong variable name was tried
+# and confirmed not to work on a real install, before this fix). This
+# script remains as a manual fallback — a documented mechanism can still
+# regress across a Cursor version, and this has not yet been re-verified
+# against a real Cursor Desktop install since switching to
+# ${CURSOR_PLUGIN_ROOT}. Codex's own packaging in this repo needs no
+# such workaround: its plugin loader resolves "cwd": "." against the
+# plugin directory correctly, which is specific to Codex.
 #
 # Run this from an *installed* copy of the plugin (e.g. after copying it
 # into ~/.cursor/plugins/local/helmi-ops-cursor, or after a Marketplace
@@ -78,6 +81,11 @@ mcp_path, bin_path = pathlib.Path(sys.argv[1]), sys.argv[2]
 mcp = json.loads(mcp_path.read_text())
 mcp["mcpServers"]["helmi-local"]["command"] = bin_path
 mcp["mcpServers"]["helmi-local"].pop("args", None)
+# An absolute command needs no cwd substitution — and leaving the
+# unexpanded "${CURSOR_PLUGIN_ROOT}" literal in place would break this
+# override outright if that's exactly the substitution this manual
+# fallback is being run to work around.
+mcp["mcpServers"]["helmi-local"].pop("cwd", None)
 mcp_path.write_text(json.dumps(mcp, indent=2) + "\n")
 PY
 

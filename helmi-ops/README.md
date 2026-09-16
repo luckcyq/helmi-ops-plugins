@@ -1,10 +1,10 @@
 # Helmi Ops for Codex
 
-**Status:** local testing only — not published to a Marketplace. The
-release *process* below is approved and implemented (see
-[`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the
-shared packaging history and open items across all three plugin packages),
-but no real external Codex Marketplace install has been done yet. See
+**Status:** verified through a real Codex personal-marketplace install and
+live OAuth connection; not yet submitted for public review. The release
+*process* below is approved and implemented (see
+[`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the shared
+packaging history and open items across all three plugin packages). See
 [`../SECURITY-MODEL.md`](../SECURITY-MODEL.md) for how `helmi-local`/
 `helmi-cloud` actually enforce safety across all three packages.
 
@@ -33,9 +33,9 @@ plugin/build.sh codex
   `client_id = "https://chatgpt.com/oauth/codex/client.json"`) rather than
   the fixed `clientId`/local-callback-port pair Claude Code and Cursor
   declare up front — a different OAuth discovery model, not a missing one.
-  This has not been exercised end-to-end against a real Codex install the
-  way the Claude Code flow has (see `../SECURITY-MODEL.md` §6), so treat
-  it as "plausibly by design, not yet empirically confirmed."
+  Verified end to end on a real Codex install (2026-09-15): the Connect
+  flow completed OAuth and a live `helmi-cloud` `list_probe_capabilities`
+  call for `cisco_ios` returned 47 probes.
 
 ## Platform Support
 

@@ -1,0 +1,17 @@
+{
+  "name": "helmi-ops-plugins",
+  "owner": {
+    "name": "Helmicore",
+    "email": "support@helmicore.com"
+  },
+  "metadata": {
+    "description": "Helmi Ops: local-first network diagnostics and configuration safety."
+  },
+  "plugins": [
+    {
+      "name": "helmi-ops-cursor",
+      "source": "helmi-ops-cursor",
+      "description": "Diagnose, monitor, and audit network devices with local evidence and read-only Helmi probes."
+    }
+  ]
+}
