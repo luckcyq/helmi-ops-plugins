@@ -109,9 +109,9 @@ across a full restart) works end-to-end.
 - Whether `helmi-local` could be loaded under a chat client's own
   cloud/remote/sandboxed execution mode (as opposed to running on the
   operator's own machine) has been explicitly investigated and excluded
-  only for Cursor Cloud Agents (`docs/plugin-packaging.md`'s "Cursor Cloud
-  Agent Exclusion" section — itself flagged there as "believed, not
-  confirmed" pending a real Cloud subagent test). This is not a
+  only for Cursor Cloud Agents — and even there, only as "believed, not
+  confirmed" pending a real Cloud subagent test, not empirically proven.
+  This is not a
   hypothetical concern for Claude Code either: Claude Code's own
   September 2026 changelog documents "cloud sessions and remote control
   functionality," and a Claude Code session can concretely run inside

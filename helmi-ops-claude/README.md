@@ -7,19 +7,18 @@ mechanism to check or enforce this before install (confirmed: `plugin.json`
 has no `os`/`platforms` field it reads or validates), so this line is the
 only thing that actually communicates the limitation — there's a
 best-effort `metadata.platforms` hint in `plugin.json` for any tooling
-that reads it, but Claude Code itself ignores it too. Windows support for
-Codex/Cursor is tracked separately (see `docs/plugin-packaging.md`);
-Claude Code's own path to Windows is architecturally different (its
-marketplace-based install model has one `.mcp.json` per package with no
-OS-conditional `command`, confirmed against the real plugin schema) and is
-not planned for this package.
+that reads it, but Claude Code itself ignores it too. Windows support is
+planned for the Codex and Cursor packages only, not this one — Claude
+Code's marketplace-based install model has one `.mcp.json` per package
+with no OS-conditional `command` (confirmed against the real plugin
+schema), which rules out the same per-platform packaging trick those two
+harnesses use.
 
-**Status:** local testing only — not published to a Marketplace. See
-[`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the shared
-packaging history and open items across all three plugin packages (Codex,
-Cursor, Claude Code), and [`../SECURITY-MODEL.md`](../SECURITY-MODEL.md)
-for how `helmi-local`/`helmi-cloud` actually enforce safety across all
-three.
+**Status:** verified on a real Claude Code CLI install and OAuth
+connection (2026-09-15, see "Installing" and "OAuth Compatibility"
+below); not yet submitted for public review. See
+[`../SECURITY-MODEL.md`](../SECURITY-MODEL.md) for how `helmi-local`/
+`helmi-cloud` actually enforce safety across all three packages.
 
 **Privacy Policy:** https://helmicore.com/privacy · **Terms of Service:**
 https://helmicore.com/terms. (Not declared in `plugin.json` — confirmed via
@@ -137,6 +136,5 @@ on the operator's machine). If this plugin were installed inside such a
 cloud session, `helmi-local` would be spawned there instead of on the
 operator's own network — at minimum non-functional, and a boundary worth
 excluding the same way the Cursor package excludes Cursor Cloud Agents
-(see that package's own still-unconfirmed caveat in
-`docs/plugin-packaging.md`). This has not yet been investigated for
-Claude Code specifically — see `../SECURITY-MODEL.md` §6.
+(a still-unconfirmed exclusion there too). This has not yet been
+investigated for Claude Code specifically — see `../SECURITY-MODEL.md` §6.

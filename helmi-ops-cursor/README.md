@@ -5,8 +5,6 @@
 yet installed through the actual Cursor Marketplace flow (this was a
 local-copy install at `~/.cursor/plugins/local/helmi-ops-cursor`, not a
 `source: "git"` Marketplace pull), and not yet submitted. See
-[`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the
-full plan and its current, honestly-tracked open items, and
 [`../SECURITY-MODEL.md`](../SECURITY-MODEL.md) for how `helmi-local`/
 `helmi-cloud` actually enforce safety across all three packages.
 

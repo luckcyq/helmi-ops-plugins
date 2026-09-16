@@ -1,10 +1,7 @@
 # Helmi Ops for Codex
 
 **Status:** verified through a real Codex personal-marketplace install and
-live OAuth connection; not yet submitted for public review. The release
-*process* below is approved and implemented (see
-[`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the shared
-packaging history and open items across all three plugin packages). See
+live OAuth connection; not yet submitted for public review. See
 [`../SECURITY-MODEL.md`](../SECURITY-MODEL.md) for how `helmi-local`/
 `helmi-cloud` actually enforce safety across all three packages.
 
