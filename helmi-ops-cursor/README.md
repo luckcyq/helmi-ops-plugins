@@ -43,3 +43,28 @@ PKCE OAuth flow and are safe to repeat when the connection has expired.
 This plugin never runs `helmi-local` under a Cursor Cloud/Background
 Agent — that boundary and its verification status are documented in the
 plan doc, not enforced by anything in this package alone.
+
+## Platform Support
+
+- **macOS:** the package tracked in this directory. Verified via
+  `plugin/build.sh cursor` (rebuild + real MCP smoke test, plus an
+  automated launch test and an `install.sh` backwards-compatibility
+  test) on every change.
+- **Windows (amd64):** a separate package, built and smoke-tested by
+  `.github/workflows/release.yml`'s `build-windows` job, not tracked in
+  this directory — it uses `mcp.windows.json` (referencing
+  `helmi-local.exe` directly, no POSIX shebang launcher) and
+  `install.ps1` (a plain PowerShell port of `install.sh`'s original
+  design, not the self-locating launcher trick in this directory's own
+  `mcp.json`, since that trick was only ever verified against a real
+  macOS Cursor install). Confirmed 2026-09-15: `helmi-local.exe`/
+  `helmi-compress-worker.exe` compile on a real `windows-latest` runner
+  and pass the same real MCP/protocol smoke tests as the macOS build.
+  `install.ps1`'s own logic (git-checkout safety guard, atomic install,
+  `mcp.json` rewrite) was tested end to end with PowerShell Core, but
+  **not on a real Windows machine, and not against a real Cursor
+  install** — nothing has confirmed Cursor for Windows can actually
+  discover and launch this package yet. Treat Windows support as
+  CI-verified, not field-verified.
+- **Linux:** not packaged from this directory; see
+  `.github/workflows/release.yml`'s `build-linux` job.

@@ -36,3 +36,28 @@ plugin/build.sh codex
   This has not been exercised end-to-end against a real Codex install the
   way the Claude Code flow has (see `../SECURITY-MODEL.md` §6), so treat
   it as "plausibly by design, not yet empirically confirmed."
+
+## Platform Support
+
+- **macOS (Apple Silicon / arm64):** the package tracked in this
+  directory. Verified via `plugin/build.sh codex` (rebuild + real MCP
+  smoke test) on every change.
+- **Windows (amd64):** built and smoke-tested by `.github/workflows/
+  release.yml`'s `build-windows` job — `helmi-local.exe` and
+  `helmi-compress-worker.exe` compile on a real `windows-latest` runner
+  and pass the same real MCP initialize/tools-list and compress-worker
+  protocol checks as the macOS build (confirmed 2026-09-15, after fixing
+  two real bugs this job's own runs caught: a Windows-only
+  `syscall.Close` type mismatch, and `helmi-local` silently shipping a
+  non-functional `go-sqlite3` stub because it was built with
+  `CGO_ENABLED=0`). **What is NOT yet confirmed:** a real Codex install
+  on an actual Windows machine — the smoke test proves the binary itself
+  runs and speaks MCP correctly, not that Codex's Windows client can
+  discover, launch, and use this package end to end. Treat Windows
+  support as CI-verified, not field-verified, until someone actually
+  installs it in real Codex on Windows.
+- **Linux:** not packaged from this directory; see
+  `.github/workflows/release.yml`'s `build-linux` job, which packages
+  `helmi-ops` for linux-amd64 separately (also gained a real smoke test
+  alongside the Windows work, after which the exact same `CGO_ENABLED=0`
+  mistake was found and fixed there too).
