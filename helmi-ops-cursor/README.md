@@ -4,6 +4,9 @@
 `helmi-local` connects and Cursor's own MCP UI shows all 44 tools. This
 package is for macOS Apple Silicon only.
 
+**Privacy Policy:** https://helmicore.com/privacy · **Terms of Service:**
+https://helmicore.com/terms
+
 **Submission target:** Cursor Marketplace needs a public Git repository,
 and this directory's parent (the `helmi` monorepo) is not it — submit
 against [luckcyq/helmi-ops-plugins](https://github.com/luckcyq/helmi-ops-plugins)

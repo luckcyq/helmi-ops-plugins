@@ -3,6 +3,9 @@
 **Status:** verified through a real Codex personal-marketplace install and
 live OAuth connection. This package is for macOS Apple Silicon only.
 
+**Privacy Policy:** https://helmicore.com/privacy · **Terms of Service:**
+https://helmicore.com/terms
+
 ## Installing
 
 Point Codex at this package's directory directly — no marketplace
