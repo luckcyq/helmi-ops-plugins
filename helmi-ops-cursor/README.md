@@ -1,12 +1,8 @@
 # Helmi Ops for Cursor
 
-**Status:** verified on a real Cursor Desktop install (2026-09-15) —
-`helmi-local` connects and Cursor's own MCP UI shows all 44 tools. Not
-yet installed through the actual Cursor Marketplace flow (this was a
-local-copy install at `~/.cursor/plugins/local/helmi-ops-cursor`, not a
-`source: "git"` Marketplace pull), and not yet submitted. See
-[`../SECURITY-MODEL.md`](../SECURITY-MODEL.md) for how `helmi-local`/
-`helmi-cloud` actually enforce safety across all three packages.
+**Status:** verified on a real Cursor Desktop install (2026-09-15):
+`helmi-local` connects and Cursor's own MCP UI shows all 44 tools. This
+package is for macOS Apple Silicon only.
 
 **Submission target:** Cursor Marketplace needs a public Git repository,
 and this directory's parent (the `helmi` monorepo) is not it — submit
@@ -74,48 +70,12 @@ PKCE OAuth flow and are safe to repeat when the connection has expired.
   fixed, Helmi-approved client ID and localhost callback; no client secret is
   stored in this package.
 
-This plugin supports local Cursor Desktop sessions only. Running
-`helmi-local` under a Cursor Cloud/Background Agent is unverified and
-unsupported — nothing in this package enforces that boundary; it relies on
-Cursor's own documented architecture (Cloud/Background Agents run isolated
-from a user's local plugin installs) rather than a check this plugin
-performs itself. See `../SECURITY-MODEL.md` §6 for what has and has not
-been empirically confirmed.
+This plugin supports local Cursor Desktop sessions only. Cursor
+Cloud/Background Agent use is unsupported and unverified.
 
-## Platform Support
+## Platform support
 
-- **macOS:** the package tracked in this directory. Verified via
-  `plugin/build.sh cursor` (rebuild + real MCP smoke test, plus an
-  automated launch test and an `install.sh` backwards-compatibility
-  test) on every change, and confirmed on a real Cursor Desktop
-  install (2026-09-15, see "Automatic Setup" above) — 44 tools visible,
-  no manual `install.sh` step needed.
-- **Windows (amd64):** a separate package, built and smoke-tested by
-  `.github/workflows/release.yml`'s `build-windows` job, not tracked in
-  this directory, and **not installable through Cursor Marketplace** —
-  Marketplace installs straight from this directory's own git-tracked
-  `mcp.json`/`scripts/helmi-local`, which are POSIX-only; there is no
-  per-platform selection at the Marketplace level (see
-  `../helmi-ops-claude/README.md`'s equivalent note on why Claude Code
-  has the identical constraint). The Windows package is a manual
-  zip-and-run distribution outside Marketplace, using `mcp.windows.json`
-  (referencing `helmi-local.exe` directly, no POSIX shebang launcher)
-  and `install.ps1` (a plain PowerShell port of `install.sh`'s design).
-  Confirmed 2026-09-15: `helmi-local.exe`/`helmi-compress-worker.exe`
-  compile on a real `windows-latest` runner and pass the same real
-  MCP/protocol smoke tests as the macOS build. `install.ps1`'s own logic
-  (git-checkout safety guard, atomic install, `mcp.json` rewrite) was
-  tested end to end with PowerShell Core, but **not on a real Windows
-  machine, and not against a real Cursor install** — nothing has
-  confirmed Cursor for Windows can actually discover and launch this
-  package yet. Treat Windows support as CI-verified, not field-verified.
-- **Linux:** not packaged from this directory, and **not available
-  through Cursor Marketplace** — the git-tracked package here bundles
-  compiled macOS arm64 (Mach-O) binaries (`scripts/helmi-local.bin`,
-  `scripts/helmi-compress-worker`); the wrapper shell script being POSIX
-  syntax doesn't matter, since Linux cannot execute a Mach-O binary at
-  all regardless. A Linux install needs the separate zip from
-  `.github/workflows/release.yml`'s `build-linux` job instead, exactly
-  like Windows. Do not claim Marketplace covers Linux, Intel Mac, or any
-  platform other than Apple Silicon macOS — that is the only architecture
-  the tracked binaries are actually built for.
+**macOS Apple Silicon (arm64) only.** The bundled native executables are
+arm64 Mach-O binaries. This package must not be installed on Intel Macs,
+Windows, or Linux. `plugin/build.sh cursor` rebuilds and MCP-smoke-tests
+the package; the local Cursor Desktop install also showed all 44 tools.
