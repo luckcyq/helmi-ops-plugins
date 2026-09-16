@@ -74,9 +74,13 @@ PKCE OAuth flow and are safe to repeat when the connection has expired.
   fixed, Helmi-approved client ID and localhost callback; no client secret is
   stored in this package.
 
-This plugin never runs `helmi-local` under a Cursor Cloud/Background
-Agent — that boundary and its verification status are documented in the
-plan doc, not enforced by anything in this package alone.
+This plugin supports local Cursor Desktop sessions only. Running
+`helmi-local` under a Cursor Cloud/Background Agent is unverified and
+unsupported — nothing in this package enforces that boundary; it relies on
+Cursor's own documented architecture (Cloud/Background Agents run isolated
+from a user's local plugin installs) rather than a check this plugin
+performs itself. See `../SECURITY-MODEL.md` §6 for what has and has not
+been empirically confirmed.
 
 ## Platform Support
 

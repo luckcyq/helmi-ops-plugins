@@ -49,22 +49,23 @@ reload the Code tab / restart Claude Code so it picks up the new MCP
 servers, then check that `helmi-local`'s tools (e.g. `list_devices`,
 `collect_probe`) appear.
 
-No `install.sh` step is needed here, unlike the Cursor package. Claude Code's
-plugin manifest supports `${CLAUDE_PLUGIN_ROOT}` as a substitution variable
-directly inside an MCP server's `command` field
-(`.mcp.json`'s `helmi-local` entry uses it), so the stdio server resolves to
-this plugin's real install directory without any relative-path workaround.
-This is a real, documented difference from both other packages: Codex's own
-loader resolves a `cwd: "."` override correctly (its own package uses that),
-and Cursor resolves neither relative `command` nor `cwd` at all (see
-`plugin/helmi-ops-cursor/install.sh` for that workaround). `${CLAUDE_PLUGIN_ROOT}`
-is per Anthropic's own plugin reference docs, and is now also empirically
-confirmed, not just documented: installed via `/plugin marketplace add`
-and `/plugin install` on a real Claude Code CLI session (2026-09-15),
-`list_devices` was called through `plugin:helmi-ops:helmi-local` and
-returned this machine's real configured device inventory with no device
-actually contacted — the substitution resolves correctly with no
-`install.sh`-style workaround needed on this harness.
+No `install.sh` step is needed here. Claude Code's plugin manifest supports
+`${CLAUDE_PLUGIN_ROOT}` as a substitution variable directly inside an MCP
+server's `command` field (`.mcp.json`'s `helmi-local` entry uses it), so the
+stdio server resolves to this plugin's real install directory without any
+relative-path workaround. Codex's own loader resolves a plain `cwd: "."`
+override correctly (its own package uses that); Cursor does not resolve a
+plain relative `command`/`cwd` the same way, but resolves its own
+`${CURSOR_PLUGIN_ROOT}` substitution variable in `cwd` instead (see
+`../helmi-ops-cursor/README.md`) — also no `install.sh` step needed on its
+main path today, though `install.sh` remains available there for optional
+manual/offline installs. `${CLAUDE_PLUGIN_ROOT}` is per Anthropic's own
+plugin reference docs, and is now also empirically confirmed, not just
+documented: installed via `/plugin marketplace add` and `/plugin install`
+on a real Claude Code CLI session (2026-09-15), `list_devices` was called
+through `plugin:helmi-ops:helmi-local` and returned this machine's real
+configured device inventory with no device actually contacted — the
+substitution resolves correctly with no workaround needed on this harness.
 
 ## OAuth Compatibility: Restricted Registration Endpoint & Static Client Support
 
@@ -125,8 +126,9 @@ and an explicit error (not a silent skip) if the device has no binding.
 - `helmi-local` (stdio): local device SSH, macOS Keychain, Prometheus,
   Evidence, and the loopback Local UI. Runs entirely on this machine.
 - `helmi-cloud` (remote, OAuth): Helmi Cloud's bounded diagnostic knowledge
-  and probe-bundle resolution. See the known-risk section above before
-  relying on this in a given Claude Code version.
+  and probe-bundle resolution. See the cloud-session risk note below (and
+  `../SECURITY-MODEL.md` §6) before relying on this in a given Claude Code
+  version.
 
 This plugin does not address whether `helmi-local` runs safely under
 Claude Code's own cloud session / remote-control functionality (real,
