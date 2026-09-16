@@ -10,7 +10,7 @@
     "url": "https://helmicore.com"
   },
   "homepage": "https://helmicore.com",
-  "repository": "https://github.com/helmicore/helmi",
+  "repository": "https://github.com/luckcyq/helmi-ops-plugins/tree/main/helmi-ops-cursor",
   "license": "Apache-2.0",
   "privacyPolicy": "https://helmicore.com/privacy",
   "termsOfService": "https://helmicore.com/terms",
