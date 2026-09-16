@@ -129,7 +129,14 @@ and an explicit error (not a silent skip) if the device has no binding.
   and probe-bundle resolution. See the known-risk section above before
   relying on this in a given Claude Code version.
 
-This plugin does not address whether `helmi-local` runs safely under any
-Claude Code cloud/remote execution mode — that boundary has not been
-investigated for this harness (see the Cursor package's own equivalent,
-still-unconfirmed caveat in `docs/plugin-packaging.md`).
+This plugin does not address whether `helmi-local` runs safely under
+Claude Code's own cloud session / remote-control functionality (real,
+documented in Claude Code's September 2026 changelog — a Claude Code
+session can run inside Anthropic's own cloud infrastructure rather than
+on the operator's machine). If this plugin were installed inside such a
+cloud session, `helmi-local` would be spawned there instead of on the
+operator's own network — at minimum non-functional, and a boundary worth
+excluding the same way the Cursor package excludes Cursor Cloud Agents
+(see that package's own still-unconfirmed caveat in
+`docs/plugin-packaging.md`). This has not yet been investigated for
+Claude Code specifically — see `../SECURITY-MODEL.md` §6.

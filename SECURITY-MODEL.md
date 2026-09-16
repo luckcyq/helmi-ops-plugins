@@ -111,10 +111,19 @@ across a full restart) works end-to-end.
   operator's own machine) has been explicitly investigated and excluded
   only for Cursor Cloud Agents (`docs/plugin-packaging.md`'s "Cursor Cloud
   Agent Exclusion" section — itself flagged there as "believed, not
-  confirmed" pending a real Cloud subagent test). It has not yet been
-  investigated at all for Claude Code or Codex's own equivalent modes, if
-  any exist. Until confirmed, treat this as an open question rather than a
-  guarantee for those two clients.
+  confirmed" pending a real Cloud subagent test). This is not a
+  hypothetical concern for Claude Code either: Claude Code's own
+  September 2026 changelog documents "cloud sessions and remote control
+  functionality," and a Claude Code session can concretely run inside
+  Anthropic's own cloud infrastructure rather than on the operator's
+  machine. If a plugin install happens inside such a cloud session,
+  `helmi-local` would be spawned there instead of on the operator's own
+  network — at minimum non-functional (no route to the operator's real
+  devices), and worth excluding the same way Cursor's Cloud Agents are,
+  once a way to test it exists. This has not yet been investigated for
+  Claude Code (or for Codex's own equivalent mode, if any exists) the way
+  it has for Cursor. Until confirmed, treat this as an open, concrete risk
+  for those two clients, not a guarantee it can't happen.
 - `helmi-cloud`'s OAuth implementation has been exercised end-to-end
   against Claude Code specifically, not against every possible MCP client
   OAuth implementation in the abstract.
