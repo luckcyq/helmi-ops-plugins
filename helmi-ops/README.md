@@ -61,3 +61,10 @@ plugin/build.sh codex
   `helmi-ops` for linux-amd64 separately (also gained a real smoke test
   alongside the Windows work, after which the exact same `CGO_ENABLED=0`
   mistake was found and fixed there too).
+
+**What is actually submitted for public review is this directory as-is**
+(macOS Apple Silicon binaries only). Do not describe the submission as
+covering Windows, Linux, or Intel Mac — those are separate zip
+distributions outside whatever install path a Codex Marketplace/plugin
+directory listing uses, and none of that has been confirmed to support
+per-platform binary selection the way this note might otherwise imply.

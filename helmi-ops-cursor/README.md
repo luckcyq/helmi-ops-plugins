@@ -107,8 +107,13 @@ plan doc, not enforced by anything in this package alone.
   machine, and not against a real Cursor install** — nothing has
   confirmed Cursor for Windows can actually discover and launch this
   package yet. Treat Windows support as CI-verified, not field-verified.
-- **Linux:** not packaged from this directory; see
-  `.github/workflows/release.yml`'s `build-linux` job. Same Marketplace
-  constraint as Windows applies in reverse for Linux users going through
-  Marketplace rather than the manual zip — POSIX `scripts/helmi-local`
-  itself works fine on Linux, this has just never been tested there.
+- **Linux:** not packaged from this directory, and **not available
+  through Cursor Marketplace** — the git-tracked package here bundles
+  compiled macOS arm64 (Mach-O) binaries (`scripts/helmi-local.bin`,
+  `scripts/helmi-compress-worker`); the wrapper shell script being POSIX
+  syntax doesn't matter, since Linux cannot execute a Mach-O binary at
+  all regardless. A Linux install needs the separate zip from
+  `.github/workflows/release.yml`'s `build-linux` job instead, exactly
+  like Windows. Do not claim Marketplace covers Linux, Intel Mac, or any
+  platform other than Apple Silicon macOS — that is the only architecture
+  the tracked binaries are actually built for.
