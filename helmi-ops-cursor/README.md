@@ -1,8 +1,11 @@
 # Helmi Ops for Cursor
 
-**Status:** package structure and manifests are submission-ready; not yet
-submitted, and not yet installed through a real Cursor Marketplace flow.
-See [`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the
+**Status:** verified on a real Cursor Desktop install (2026-09-15) —
+`helmi-local` connects and Cursor's own MCP UI shows all 44 tools. Not
+yet installed through the actual Cursor Marketplace flow (this was a
+local-copy install at `~/.cursor/plugins/local/helmi-ops-cursor`, not a
+`source: "git"` Marketplace pull), and not yet submitted. See
+[`docs/plugin-packaging.md`](../../docs/plugin-packaging.md) for the
 full plan and its current, honestly-tracked open items, and
 [`../SECURITY-MODEL.md`](../SECURITY-MODEL.md) for how `helmi-local`/
 `helmi-cloud` actually enforce safety across all three packages.
@@ -26,12 +29,22 @@ This replaced an earlier hand-rolled self-locating `sh -c` launcher that
 used the generic Agent Plugins standard's `${PLUGIN_ROOT}` — that variable
 is explicitly *not* expanded by Cursor per the same docs, which is
 consistent with why a real install once failed to resolve it (see
-`install.sh`'s own comment for that history). **This fix has not yet been
-re-verified against a real Cursor Desktop install** — `plugin/build.sh
-cursor`'s automated launch test only simulates the documented behavior
-(`cd` into the plugin directory, then run the declared relative command),
-which is not proof Cursor's own substitution behaves identically on a
-real install.
+`install.sh`'s own comment for that history). **Confirmed on a real
+Cursor Desktop install (2026-09-15):** after copying this package to
+`~/.cursor/plugins/local/helmi-ops-cursor` and reloading, `helmi-local`
+connected and Cursor's own MCP UI listed all 44 tools — `${CURSOR_PLUGIN_ROOT}`
+resolves correctly, no `install.sh` step needed.
+
+A second, separate issue surfaced on the same install: Cursor 3.20.21's
+MCP UI validator discards the *entire* tool list if any single tool's
+`outputSchema` isn't top-level `"type": "object"` — it first showed
+"connected, 0 tools" because 5 tools had a top-level array schema. Fixed
+by wrapping those 5 in `{"type": "object", "properties": {"items": <array
+schema>}}` (see `runtime/internal/mcp/schema.go`) — this turned out to
+be the actually-correct fix per the negotiated `protocolVersion`
+`2025-06-18`'s own spec (structured content "is returned as a JSON
+object"), not merely a Cursor quirk. Re-verified after this fix: 44
+tools, all visible.
 
 ### Optional: Manual Offline Installation (`install.sh`)
 
@@ -72,7 +85,9 @@ plan doc, not enforced by anything in this package alone.
 - **macOS:** the package tracked in this directory. Verified via
   `plugin/build.sh cursor` (rebuild + real MCP smoke test, plus an
   automated launch test and an `install.sh` backwards-compatibility
-  test) on every change.
+  test) on every change, and confirmed on a real Cursor Desktop
+  install (2026-09-15, see "Automatic Setup" above) — 44 tools visible,
+  no manual `install.sh` step needed.
 - **Windows (amd64):** a separate package, built and smoke-tested by
   `.github/workflows/release.yml`'s `build-windows` job, not tracked in
   this directory, and **not installable through Cursor Marketplace** —
