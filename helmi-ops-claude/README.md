@@ -1,8 +1,17 @@
 # Helmi Ops for Claude Code
 
-**Platform: macOS Apple Silicon (arm64) only.** The bundled native
-executables are arm64 Mach-O binaries and will not run on Intel Macs,
-Windows, or Linux.
+**Platform: macOS, Apple Silicon or Intel.** Each released archive
+carries the native executables for one architecture; the Universal
+archive carries both. Not Windows or Linux — the bundled runtime stores
+device credentials in the macOS Keychain and authenticates SSH through
+macOS's own OpenSSH.
+
+**Installing from a marketplace gets the Apple Silicon build.** A
+marketplace installs by cloning the plugin repository, and a repository
+holds one binary per path — committing every architecture there would put
+a fresh copy of each in git history on every release. On an Intel Mac,
+download the universal archive from https://helmicore.com/plugins
+instead.
 
 **Status:** verified on a real Claude Code CLI install and OAuth
 connection (2026-09-15, see "Installing" and "OAuth Compatibility"
