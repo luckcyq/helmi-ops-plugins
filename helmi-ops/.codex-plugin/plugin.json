@@ -1,6 +1,6 @@
 {
   "name": "helmi-ops",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Diagnose, monitor, and audit network devices with local evidence and read-only Helmi probes.",
   "author": {
     "name": "Helmicore",
